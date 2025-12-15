@@ -6,9 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flared РЕЗЕРВ</title>
     <meta name="description" content="Резервная ссылка на Telegram канал Flared">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="SNECHINKA.svg" as="image">
+    <link rel="preload" href="snowfall.js" as="script">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font with display swap for faster text rendering -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -82,19 +91,26 @@
     <script src="snowfall.js"></script>
 
     <!-- Lottie and Pako for TGS animation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script>
-        // Load TGS animation (compressed Lottie)
         async function loadTGS() {
+            const container = document.getElementById('tgs-animation');
+            if (!container) {
+                console.error('TGS container not found');
+                return;
+            }
+            
             try {
                 const response = await fetch('snow.tgs');
+                if (!response.ok) throw new Error('Failed to fetch snow.tgs');
+                
                 const buffer = await response.arrayBuffer();
                 const decompressed = pako.inflate(new Uint8Array(buffer), { to: 'string' });
                 const animationData = JSON.parse(decompressed);
 
                 lottie.loadAnimation({
-                    container: document.getElementById('tgs-animation'),
+                    container: container,
                     renderer: 'svg',
                     loop: true,
                     autoplay: true,
@@ -105,7 +121,12 @@
             }
         }
 
-        loadTGS();
+        // Load immediately when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadTGS);
+        } else {
+            loadTGS();
+        }
     </script>
 </body>
 

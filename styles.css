@@ -65,6 +65,8 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 0;
+    will-change: contents;
+    contain: strict;
 }
 
 /* Container */
@@ -118,18 +120,22 @@ body {
 /* TGS Animation container */
 .tgs-container {
     position: relative;
-    /* Changed from fixed to relative */
     width: 180px;
     height: 180px;
-    margin-bottom: -20px;
-    /* Overlap slightly with container */
+    min-width: 180px;
+    min-height: 180px;
+    margin-bottom: 20px;
     z-index: 10;
     pointer-events: none;
     animation: fadeInUp 0.8s ease-out;
     filter: drop-shadow(0 0 30px rgba(100, 200, 255, 0.6));
-    /* Reduced shadow complexity for perf */
     will-change: transform;
     transform: translateZ(0);
+}
+
+.tgs-container svg {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* Title */
@@ -339,6 +345,25 @@ body {
     }
 }
 
+/* Reduce animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    #snowfall {
+        display: none;
+    }
+    
+    .glow-1, .glow-2 {
+        animation: none;
+    }
+}
+
 /* Responsive */
 @media (max-width: 480px) {
     .container {
@@ -371,8 +396,9 @@ body {
     .tgs-container {
         width: 150px;
         height: 150px;
-        margin-bottom: -10px;
-        /* Compact spacing */
+        min-width: 150px;
+        min-height: 150px;
+        margin-bottom: 15px;
     }
 
     .layout-wrapper {

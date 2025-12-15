@@ -323,7 +323,7 @@ body {
 @media (max-width: 480px) {
     .container {
         padding: 40px 24px;
-        margin: 20px;
+        margin: 230px 20px 40px 20px;
         border-radius: 20px;
     }
 

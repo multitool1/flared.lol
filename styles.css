@@ -345,4 +345,11 @@ body {
         width: 250px;
         height: 250px;
     }
+
+    /* Adjust TGS position on mobile */
+    .tgs-container {
+        width: 160px;
+        height: 160px;
+        transform: translate(-50%, -50%) translateY(-340px);
+    }
 }

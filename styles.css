@@ -68,13 +68,26 @@ body {
 }
 
 /* Container */
+.layout-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    z-index: 1;
+    gap: 0;
+    /* Adjusted dynamically */
+}
+
 .container {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 40px;
+    padding: 30px 40px;
     background: var(--card-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -85,6 +98,9 @@ body {
         0 0 100px var(--accent-glow);
     z-index: 1;
     animation: fadeInUp 0.8s ease-out;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    /* Hardware acceleration */
 }
 
 @keyframes fadeInUp {
@@ -101,16 +117,19 @@ body {
 
 /* TGS Animation container */
 .tgs-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateY(-260px);
+    position: relative;
+    /* Changed from fixed to relative */
     width: 180px;
     height: 180px;
+    margin-bottom: -20px;
+    /* Overlap slightly with container */
     z-index: 10;
     pointer-events: none;
     animation: fadeInUp 0.8s ease-out;
-    filter: drop-shadow(0 0 30px rgba(100, 200, 255, 0.6)) drop-shadow(0 0 60px rgba(0, 136, 204, 0.4));
+    filter: drop-shadow(0 0 30px rgba(100, 200, 255, 0.6));
+    /* Reduced shadow complexity for perf */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 /* Title */
@@ -198,32 +217,33 @@ body {
     }
 }
 
-/* Decorative glows */
+/* Decorative glows - Optimized with radial gradients instead of blur filter */
 .glow {
     position: fixed;
     border-radius: 50%;
-    filter: blur(100px);
+    /* filter: blur(100px); Removed for performance */
     pointer-events: none;
     z-index: 0;
+    will-change: transform;
+    /* Hint for compositor */
 }
 
 .glow-1 {
-    width: 400px;
-    height: 400px;
-    background: var(--telegram-blue);
-    opacity: var(--glow-opacity);
-    top: -100px;
-    right: -100px;
+    width: 600px;
+    /* Increased size to compensate for lack of blur spread */
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 136, 204, 0.4) 0%, rgba(0, 136, 204, 0) 70%);
+    top: -150px;
+    right: -150px;
     animation: float 8s ease-in-out infinite;
 }
 
 .glow-2 {
-    width: 350px;
-    height: 350px;
-    background: var(--accent-color);
-    opacity: var(--glow-opacity);
-    bottom: -100px;
-    left: -100px;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(116, 204, 197, 0.45) 0%, rgba(116, 204, 197, 0) 70%);
+    bottom: -150px;
+    left: -150px;
     animation: float 8s ease-in-out infinite 2s;
 }
 
@@ -231,11 +251,11 @@ body {
 
     0%,
     100% {
-        transform: translate(0, 0);
+        transform: translate3d(0, 0, 0);
     }
 
     50% {
-        transform: translate(30px, 30px);
+        transform: translate3d(30px, 30px, 0);
     }
 }
 
@@ -323,7 +343,8 @@ body {
 @media (max-width: 480px) {
     .container {
         padding: 40px 24px;
-        margin: 230px 20px 40px 20px;
+        /* No fixed margins needed with flex wrapper, just some spacing */
+        margin: 0 20px;
         border-radius: 20px;
     }
 
@@ -348,8 +369,15 @@ body {
 
     /* Adjust TGS position on mobile */
     .tgs-container {
-        width: 160px;
-        height: 160px;
-        transform: translate(-50%, -50%) translateY(-340px);
+        width: 150px;
+        height: 150px;
+        margin-bottom: -10px;
+        /* Compact spacing */
+    }
+
+    .layout-wrapper {
+        padding-top: 20px;
+        /* Slight offset if needed */
+        padding-bottom: 40px;
     }
 }

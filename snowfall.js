@@ -145,10 +145,14 @@ class Snowfall {
             this.ctx.rotate(flake.rotation * Math.PI / 180);
             this.ctx.globalAlpha = flake.opacity;
 
-            // Add glow effect for closer snowflakes (layer 1 and 2)
-            if (flake.layer >= 1) {
-                this.ctx.shadowColor = 'rgba(100, 200, 255, 0.8)';
-                this.ctx.shadowBlur = 10 + flake.layer * 10; // layer 1: 20, layer 2: 30
+            // Add glow effect only for the closest snowflakes and reducing cost
+            // Optimization: Shadow blur is expensive. Reduce frequency/radius.
+            if (flake.layer === 2) {
+                this.ctx.shadowColor = 'rgba(100, 200, 255, 0.5)';
+                this.ctx.shadowBlur = 10;
+            } else {
+                this.ctx.shadowBlur = 0;
+                this.ctx.shadowColor = 'transparent';
             }
 
             if (this.snowflakeImage.complete && this.snowflakeImage.naturalWidth > 0) {
